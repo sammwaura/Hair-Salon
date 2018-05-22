@@ -1,4 +1,4 @@
-# Hair-Salon APP
+# Hair-Salon 
 
 This is an app that allows the employer to add stylists and clients to her app.
 The app also assigns various clients to one stylist.
@@ -43,3 +43,4 @@ gradle run
 ### CONTACT DETAILS
 
 For any feedback or question you can contact me via slack @sammwaura or through +254740116783
+
