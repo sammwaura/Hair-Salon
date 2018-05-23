@@ -1,108 +1,88 @@
-import org.sql2o.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
+import org.sql2o.*;
+import java.util.Random;
 
-public class Stylist{
-
-    //private variables for the stylist class i.e their name, phone number and id
-    private String stylistName;
-    private int phoneNumber;
+public class Stylist {
+    private String name;
     private int id;
+    private Random randomImg = new Random();
+    String[] images = {"http://i.imgur.com/2rlQBmq.jpg", "http://i.imgur.com/caBkzsg.jpg","http://i.imgur.com/0MNpptH.jpg"};
 
-
-    //method to overide the equals method
-    @Override
-    public boolean equals(Object otherStylist){
-        if (!(otherStylist instanceof Stylist)) {
-            return false;
-        }else{
-            Stylist newStylist = (Stylist) otherStylist;
-            return this.getName().equals(newStylist.getName())&&
-            this.getNumber()==newStylist.getNumber();
-        }
-
+    public String getImg() {
+        String imageLink = images[randomImg.nextInt(images.length)];
+        return imageLink;
     }
 
-    //constructor for the Stylist
-    public Stylist(String name, int number){
-        this.stylistName = name;
-        this.phoneNumber = number;
+    public Stylist(String name) {
+        this.name = name;
     }
 
-    //getter method for the name;
-    public String getName(){
-        return stylistName;
+    public String getName() {
+        return name;
     }
 
-    //getter method for the phone number;
-    public int getNumber(){
-        return phoneNumber;
-    }
-
-    //getter method for the id
-    public int getId(){
-        return id;
-    }
-    //the method that saves the entries to the database and also gets the key id and returns it;
-    public void save(){
-        try(Connection con = DB.sql2o.open()) {
-            String sql = "INSERT INTO stylists (stylistName, phoneNumber) VALUES (:stylistName, :phoneNumber)";
-            this.id = (int) con.createQuery(sql, true)
-            .addParameter( "stylistName", this.stylistName)
-            .addParameter("phoneNumber", this.phoneNumber)
-            .executeUpdate()
-            .getKey();
-        }
-    }
-    //the method gets all the data from the table stylist and convets it to type object Stylist
-    public static List<Stylist>all(){
-        String sql = "SELECT * FROM stylists";
-        try(Connection con = DB.sql2o.open()){
+    //Connecting a Class to the Database
+    public static List<Stylist> all() {
+        String sql = "SELECT id, name FROM stylists";
+        try (Connection con = DB.sql2o.open()) {
             return con.createQuery(sql).executeAndFetch(Stylist.class);
         }
     }
-    //the find method finds the first id property in the table stylist that matches the id proprty provided then casts it into a Stylist object
-    public static Stylist find(int id){
-        try(Connection con = DB.sql2o.open()){
-        String sql = "SELECT * FROM stylists WHERE id=:id";
-        Stylist mystylist = con.createQuery(sql)
-        .addParameter("id", id)
-        .executeAndFetchFirst(Stylist.class);
-        return mystylist;
-    }
+
+    public int getId() {
+        return id;
     }
 
-    //the method  updates the stylist name and phone number 
-    public void update(String stylistName, int phoneNumber){
-        try(Connection con = DB.sql2o.open()){
-            String sql = "UPDATE stylists SET stylistName= :stylistName, phoneNumber= :phoneNumber WHERE id= :id";
-            con.createQuery(sql)
-            .addParameter( "stylistName", stylistName)
-            .addParameter("phoneNumber", phoneNumber)
-            .addParameter("id", id)
-            .executeUpdate();
-        }
+    // public static Stylist find(int id) {
 
-    }
-    //the method  deletes the stylist name and phone number 
+    // }
 
-    public void delete(){
-        try(Connection con = DB.sql2o.open()){
-            String sql = "DELETE FROM stylists WHERE id=:id";
-            con.createQuery(sql)
-            .addParameter("id", id)
-            .executeUpdate();
+    public List<Client> getClients() {
+        try (Connection con = DB.sql2o.open()) {
+            String sql = "SELECT * FROM clients where stylistId=:id";
+            return con.createQuery(sql).addParameter("id", this.id).executeAndFetch(Client.class);
         }
     }
 
-    //method that retrieves all the clients that are saved under a specific Stylist
-    public List<Client> getClients(){
-        try(Connection con = DB.sql2o.open()){
-            String sql="SELECT * FROM clients WHERE stylistid=:id";
-            return con.createQuery(sql)
-            .addParameter("id", this.id)
-            .executeAndFetch(Client.class);
+    @Override
+    public boolean equals(Object otherStylist) {
+        if (!(otherStylist instanceof Stylist)) {
+            return false;
+
+        } else {
+            Stylist newStylist = (Stylist) otherStylist;
+            return this.getName().equals(newStylist.getName()) && this.getId() == newStylist.getId();
         }
     }
+
+    public void save() {
+        try (Connection con = DB.sql2o.open()) {
+            String sql = "INSERT INTO stylists (name) VALUES (:name)";
+            this.id = (int) con.createQuery(sql, true).addParameter("name", this.name).executeUpdate().getKey();
+        }
+    }
+
+    public static Stylist find(int id) {
+        try (Connection con = DB.sql2o.open()) {
+            String sql = "SELECT * FROM stylists where id=:id";
+            Stylist Stylist = con.createQuery(sql).addParameter("id", id).executeAndFetchFirst(Stylist.class);
+            return Stylist;
+        }
+    }
+
+    public void delete() {
+        String sql = "DELETE FROM stylists where id=:id";
+        try (Connection con = DB.sql2o.open()) {
+            con.createQuery(sql).addParameter("id", this.getId()).executeUpdate();
+        }
+    }
+
+    public void update(String description) {
+        try (Connection con = DB.sql2o.open()) {
+            String sql = "UPDATE clients SET description = :description WHERE id=:id";
+            con.createQuery(sql).addParameter("description", description).addParameter("id", id).executeUpdate();
+        }
+    }
+}
 }
