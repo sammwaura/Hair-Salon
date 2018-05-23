@@ -1,4 +1,4 @@
-import org.sql2o.*;
+import org.sql2o.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +46,7 @@ public class Stylist{
     }
     //the method that saves the entries to the database and also gets the key id and returns it;
     public void save(){
-        try(Connection con = DB.sql2o.open()){
+        try(Connection con = DB.sql2o.open()) {
             String sql = "INSERT INTO stylists (stylistName, phoneNumber) VALUES (:stylistName, :phoneNumber)";
             this.id = (int) con.createQuery(sql, true)
             .addParameter( "stylistName", this.stylistName)
