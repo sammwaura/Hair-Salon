@@ -1,96 +1,45 @@
 
+
+<h1 class="header">FRAYA's SALON</h1>
+
 <div class="row">
-  #if($stylists)
-      #foreach($stylist in $stylists)
-          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div class="well">
-              <h4>Stylist Name:</h4>
-              <h5><a href="/stylist/$stylist.getId()">$stylist.getName()</a></h5>
-            </div>
-          </div>
-      #end
-  #else
-
-    <p>No stylist</p>
-  #end
-</div>
-
-<br><br><br><br>
-  <div class="row">
-  <div class="col-xs-3 col-xs-offset-6 col-sm-3 col-sm-offset-6 col-md-3 col-md-offset-6 col-lg-3 col-lg-offset-6">
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-          Add A Stylist
-        </button>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">New Stylist</h4>
-              </div>
-              <div class="modal-body">
-                <form action="/stylist" method="post">
-                  <label for="">Stylist Name</label>
-                  <input type="text" id="stylistName" name="stylistName" class="form-control">
-                  <label for="">Stylist Number</label>
-                  <input type="number" id="phoneNumber" name="phoneNumber" class="form-control">           
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" type="submit" >Save Stylist</button>
-              </form>
-              </div>
-            </div>
-          </div>
+    <div class="col-6">
+        <div class="card">
+            <form action="/stylist" method="post">
+            <h2>Add a Stylist</h2>
+                <div class="form-group">
+                    <label for="name">Stylist Name</label>
+                    <input type="text" id="name" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="style">Stylist's Style</label>
+                    <input type="text" id="style" name="style">
+                </div>
+                <button type="submit">Submit</button>
+            </form>
         </div>
-      </div>
     </div>
+    <div class="col-6">
+        <div class="card">
+            <form action="/client" method="post">
+            <h2>Add a client</h2>
+                <div class="form-group">
+                    <label for="clientName">client Name</label>
+                    <input type="text" id="clientName" name="clientName">
+                </div>
+                <div class="form-group">
+                    <label for="clientStyle">Stylist's Style</label>
+                    <input type="text" id="clientStyle" name="clientStyle">
+                </div>
 
-    <br><br>
-
-     <div class="row">
-  <div class="col-xs-3 col-xs-offset-6 col-sm-3 col-sm-offset-6 col-md-3 col-md-offset-6 col-lg-3 col-lg-offset-6">
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-          Add A Client
-        </button>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabe">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabe">New Client:</h4>
-              </div>
-              <div class="modal-body">
-                <form action="/client" method="post">
-                  <div class="form-group">
-                    <label for="clientName">Client Name</label>
-                    <input id="clientName" name="clientName" type="text" class="form-control">
-                  </div>
-                  <div class="form-group">
-                    <label for="phoneNumber">phonenumber</label>
-                    <input id="phoneNumber" name="phoneNumber" type="number" class="form-control">
-                  </div>
-
-                <label for="stylistId">Select a Stylist</label>
-                  <select id='stylistId' name='stylistId' type='text'>
-                  #foreach($stylist in $stylists)
-                      <option value="$stylist.getId()">$stylist.getName()</option>
-                  #end
-                  </select>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button  class="btn btn-primary" type="submit" >Save Client</button>
-              </form>
-              </div>
-            </div>
-          </div>
+                <label for=":id">Select a Stylist</label>
+                <select id=':id' name=':id' type='text'>
+                    #foreach($stylist in $stylists)
+                    <option value="$stylist.getId()">$stylist.getName()</option>
+                    #end
+                </select>
+                <button type="submit">Submit</button>
+            </form>
         </div>
-      </div>
+
     </div>
