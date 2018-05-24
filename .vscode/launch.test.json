@@ -1,0 +1,28 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "Hair Salon",
+                "projectName": "Hair Salon",
+                "workingDirectory": "/home/mesh/Documents/JAVA/Hair Salon",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "Hair Salon",
+                "projectName": "Hair Salon",
+                "workingDirectory": "/home/mesh/Documents/JAVA/Hair Salon",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}
