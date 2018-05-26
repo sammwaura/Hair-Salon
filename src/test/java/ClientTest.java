@@ -1,73 +1,157 @@
 import org.junit.*;
 import static org.junit.Assert.*;
-import org.sql2o.*;
+import org.sql2o.Sql2o;
 
 public class ClientTest{
-     //rule that cleans the tests in the DB before and after tests  
+    // before test make a connection to test database
+    @Before
+    public void setUp() {
 
-     @Rule
-     public DatabaseRule database = new DatabaseRule();
- 
-     
+        DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/hair_salon_test", null, null);
+    }
+     //rule that cleans the tests in the DB  after use  
+
+     @After
+     public void tearDown(){ Client.clear(); };
+    // test to check if Client instantiates with a name    
      @Test
-     public void client_instantiatesCorrectly_true(){
-         Client myClient = new Client("jones", 11111, 1);
-         assertTrue(myClient instanceof Client);
+     public void StylistInstantiatesWithName_String(){
+         Stylist myStylist = new Stylist("Jones", "Fade");
+
+         myStylist.save();
+
+         Client newClient = new Client("Jones", "Fade", myStylist.getId());
+         
+         assertTrue(newClient instanceof Client);
      }
- 
+    //  test to check if Client instantiates with a style
      @Test
-     public void getName_instanciatesNameCorrectly_jones(){
-         Client myClient = new Client("jones", 11111, 1);
-         assertEquals("jones", myClient.getName());
+     public void StylistInstantiatesWithStyle_String(){
+        Stylist mStylist = new Stylist("Jones", "Fade");
+
+        mStylist.save();
+           
+         Client newClient = new Client("Frank", "Box",    mStylist.getId());
+
+         assertTrue(newClient instanceof Client);
  
      }
+    //Test to check if all instances of the client are returned 
 
      @Test
 
-     public void getStylistId_instanciatesStylistIdCorrectly_true(){
-        Client myClient = new Client("jones", 11111, 1);
-        assertEquals(1, myClient.getStylistId());
+     public void StylistInstantiatesWithAllInstancesOfTheStylist_true(){
+        Stylist myStylist = new Stylist("Jones", "Fade");
+
+        myStylist.save();
+
+        Client newClient1 = new Client("Jones","Mo-hawk", myStylist.getId());
+        
+        newClient1.save();
+
+        Client newClient2 = new Client("Frank","Box", myStylist.getId());
+
+        newClient2.save();
+        
+        assertTrue(Client.all().contains(newClient2));
      }
- 
+    //  test to clear array list
      @Test
-     public void getPhoneNumber_instanciatesPhoneNumberCorrectly_12345(){
-         Client myClient = new Client("jones", 11111, 1);
-         assertEquals(12345, myClient.getPhoneNumber());
+     public void Clear_EmptiesAllStylistsFromArrayList_0(){
+        Stylist mStylist = new Stylist("Jones", "Fade");
+
+        mStylist.save();
+
+         Client newClient = new Client("Jones", "Mo-hawk", mStylist.getId());
+
+         Client.clear();
+
+         assertEquals(0, Client.all().size());
  
      }
      @Test
-     public void save_savesToTheDatabase_true(){
-         Client myClient = new Client("jones", 11111, 1);
+     public void save_savesCategoryIdIntoDB_true(){
+        Stylist mStylist = new Stylist("Jones", "Box");
+
+        mStylist.save();
+
+         Client myClient = new Client("Wayne", 
+         "Mo-Hawk", mStylist.getId());
+         
          myClient.save();
-         assertTrue(Client.all().get(0).equals(myClient));
-     }
-     @Test
-     public void all_returnsAllInstancesOfClient_true(){
-         Client firstClient = new Client("sam", 5678, 1);
-         firstClient.save();
-         Client secondClient = new Client("John", 12567,2);
-         secondClient.save();
-         assertTrue(Client.all().get(0).equals(firstClient));
-         assertTrue(Client.all().get(1).equals(secondClient));
-     }
-     
-     @Test
-     public void delete_deletesClient_true() {
-       Client myClient = new Client("sam", 5678, 1);
-       myClient.save();
-       int myClientId = myClient.getId();
-       myClient.delete();
-       assertEquals(null, Client.find(myClientId));
+
+         Client savedClient = Client.find(myClient.getId());
+
+         assertEquals(savedClient.getStylistId(), mStylist.getId());
      }
 
      @Test
-     public void update_updatesClientDescription_true() {
-       Client myClient = new Client("sam", 5678, 1);
-       myClient.save();
-       myClient.update("sam", 1234);
-       assertEquals("sam", Client.find(myClient.getId()).getName());
+     public void getID_InstantiatesWithId_GreaterThan0(){
+         Client.clear();
+
+         Stylist mStylist = new Stylist("Jones", "Fade");
+
+         mStylist.save();
+
+         Client newClient = new Client("Jones", "Mo-Hawk", mStylist.getId());
+
+         newClient.save();
+
+         assertTrue(newClient.getId() > 0);
+         }
+    //  test to check if Stylist is returned with the sameID
+    @Ignore
+     @Test
+     public void find_FindInstantiatesWithSameId_newStylist2() {
+       Stylist mStylist = new Stylist("Jones", "Fade");
+         
+       mStylist.save();
+
+       Client newClient = new Client("Jones", "Mo-hawk", mStylist.getId());
+
+       newClient.save();
+
+       Client newClient2 = new Client("Frank", "Box", mStylist.getId());
+
+       assertEquals(Client.find(newClient2.getId()), newClient2);
      }
+
+    //  test to check if stylist can be updated
+    @Ignore
+     @Test
+     public void Update_UpdateInstantiatesWithUpdatedInformation_True() {
+       Stylist mStylist = new Stylist("Jones", "Fade");
+
+       mStylist.save();
+
+       Client newClient = new Client("Jones", "Mo-hawk", mStylist.getId());
+
+       newClient.save();
+
+       newClient.update("Mike", "Fine Cut");
+
+       assertEquals("Mike", Client.find(newClient.getId()).getClientName());
+     }
+
+    //  test to check if stylist can be deleted
+     @Ignore
+     @Test
+     public void Delete_DeletesInfoOfStylist_True(){
+         Stylist mStylist = new Stylist("Jones", "Fade");
+
+         mStylist.save();
+
+         Client newClient = new Client("Jones", "Mo-hawk",  mStylist.getId());
+
+         newClient.save();
+
+         int newClientId = newClient.getId();
+
+         newClient.deleteClient();
+
+         assertEquals(null, Client.find(newClientId));
+     }
+    }
 
 
  
-}
