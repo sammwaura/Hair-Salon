@@ -1,48 +1,119 @@
 import org.junit.*;
 import static org.junit.Assert.*;
-import org.sql2o.*;
+import org.sql2o.Sql2o;
+import java.util.Arrays;
 
 public class StylistTest{
 
-    //rule that cleans the tests in the DB before and after tests    
+    // before test make a connection to the DB 
+    @Before    
     @Rule
-    public DatabaseRule database = new DatabaseRule();
+    public void setUp(){
 
-    
+        DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432//hair_salon_test", null, null);
+    }
+    // clearing the testdatabase after use
+    @After
+    public void tearDown(){ Stylist.clear();
+    }
+    // test to check if Stylist Instantiates with a name
     @Test
-    public void stylist_instantiatesCorrectly_true(){
-        Stylist myStylist = new Stylist("jones", 11111);
-        assertTrue(myStylist instanceof Stylist);
+    public void Stylist_instantiatesWithName_String(){
+        Stylist newStylist = new Stylist("Jones", "Fade");
+
+        assertTrue(newStylist instanceof Stylist);
+    }
+    // test to check if stylist instantiates with a style
+    @Test
+    public void StylisytInstantiatesWithStyle_String(){
+        Stylist newStylist = new Stylist("Frank","Box");
+
+        assertTrue(newStylist instanceof Stylist);
+    }
+    // test to check if all insatnces of the stylists are returned
+    @Test
+    public void StylistInstantiatesWithAllInstancesOfTheStylist_true(){
+        Stylist newStylist1 = new Stylist("Jones", "Mo-hawk");
+
+        newStylist1.save();
+
+        Stylist newStylist2 = new Stylist("Frank", "Box");
+
+        newStylist2.save();
+
+        assertTrue(Stylist.allStyle().contains(newStylist2));
+
+    }
+    // test to clear array list
+    @Test
+    public void Clear_EmptiesAllStylistsFromArrayList_0(){
+        Stylist newStylist = new Stylist("Jones", "Mo-hawk");
+
+        Stylist.clear();
+
+        assertEquals(0, Stylist.allStyle().size());
     }
 
+    // test to check whether we are receiving all clients
     @Test
-    public void getName_instanciatesNameCorrectly_jones(){
-        Stylist myStylist = new Stylist("jones", 11111);
-        assertEquals("jones", myStylist.getName());
-
-    }
-
-    @Test
-    public void getNumber_instanciatesNumberCorrectly_11111(){
-        Stylist myStylist = new Stylist("jones", 11111);
-        assertEquals(11111, myStylist.getNumber());
-
-    }
-    @Test
-    public void save_savesToTheDatabase_true(){
-        Stylist myStylist = new Stylist("jones", 11111);
+    public void getTasks_retrieveAllTasksFromDatabase_tasksList(){
+        Stylist myStylist = new Stylist("Jones", "Box");
         myStylist.save();
-        assertTrue(Stylist.all().get(0).equals(myStylist));
+        Client myClient1 = new Client("Wayne", "Mo-hawk", myStylist.getId());
+        Client myClient2 = new Client("Mike", "Clean Cut", myStylist.getId());
+        myClient2.save();
+        Client[] clients = new Client[] { myClient1, myClient2 };
+        assertTrue(myStylist.getClients().containsAll(Arrays.asList(clients)));
     }
+    // test to check if stylist instantiates with ID
     @Test
-    public void all_returnsAllInstancesOfStylist_true(){
-        Stylist firstStylist = new Stylist("sam", 5678);
-        firstStylist.save();
-        Stylist secondStylist = new Stylist("John", 12567);
-        secondStylist.save();
-        assertTrue(Stylist.all().get(0).equals(firstStylist));
-        assertTrue(Stylist.all().get(1).equals(secondStylist));
-    }
+    public void getID_instantiatesWithId_GreaterThan0(){
+        Stylist.clear();
+       
+        Stylist newStylist = new Stylist("Jones", "Mo-hawk");
 
+        newStylist.save();
+
+        assertTrue(newStylist.getId() > 0);
+    }
+// test to check if Stylist is returned with the same ID
+@Test
+public void find_FindInstantiatesWithSameId_newStylist2() {
+    Stylist newStylist1 = new Stylist ("Jones", "Mo-hawk");
+
+    newStylist1.save();
+
+    Stylist newStylist2 = new Stylist("Frank", "Box");
+
+    newStylist2.save();
+
+    assertEquals(Stylist.find(newStylist2.getId()), newStylist2);
+}
+// test to check if stylist's details can be updated
+@Testpublic void Update_UpdateInstantiatesWithUpdatedInformation_True(){
+    Stylist newStylist = new Stylist("Jones", "Mo-hawk");
+
+    newStylist.save();
+
+    newStylist.update("Mike", "fine Cut");
+
+    assertEquals("Mike", Stylist.find(newStylist.getId()).getName());
+
+}
+
+// test to check if stylist can be deleted
+@Test
+public void Delete_DeleteDeleteInfoOfStylist_True(){
+
+    Stylist newStylist = new Stylist("Jones", "Mo-hawk");
+
+    newStylist.save();
+
+    int newStylistId = newStylist.getId();
+
+    newStylist.delete();
+
+    assertEquals(null, Stylist.find(newStylistId));
+}
 
 }
