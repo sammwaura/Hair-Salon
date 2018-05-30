@@ -1,8 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-archivesBaseName = "Hair Salon"
+archivesBaseName = "hair-salon"
 version = '1.0'
+applicationName = "hair-salon"
 mainClassName = "App"
 
 repositories {
