@@ -47,7 +47,7 @@ public class App {
      
 
         //STYLIST
-        post("/stylists", (request, response) -> {
+        post("/stylist", (request, response) -> {
             Map<String, Object> model = new HashMap<String, Object>();
             String name = request.queryParams("name");
             String style = request.queryParams("style");
@@ -59,7 +59,7 @@ public class App {
     
         get("/stylist", (request, response) ->{
             Map<String, Object> model = new HashMap<String, Object>();
-            // model.put("stylists", Stylist.all());
+             model.put("stylists", Stylist.all());
             model.put("template", "templates/stylist.vtl");
             return new ModelAndView(model, layout);
         },new VelocityTemplateEngine());
@@ -74,7 +74,7 @@ public class App {
         }, new VelocityTemplateEngine());
     
         //the post method that is responsible for deleting client
-        post("/client/:id", (request, response)->{
+        post("/delete/:id", (request, response)->{
             Map<String, Object> model = new HashMap<String, Object>();
             Client client = Client.find(Integer.parseInt(request.params(":id")));
             client.deleteClient();
@@ -94,7 +94,7 @@ public class App {
         },new VelocityTemplateEngine());
 
         //Client
-        post("/client", (request, response) -> {
+        post("/client/:id", (request, response) -> {
             Map<String, Object> model = new HashMap<String, Object>();
             Stylist stylist = Stylist.find(Integer.parseInt(request.queryParams(":id")));
             String clientName = request.queryParams("clientName");

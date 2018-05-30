@@ -1,23 +1,33 @@
-
-
-  body{
-    background-color: blue;
+.card{
+    /* background-color: white */
+    margin-top:100px;
+    margin-left:50px;
     
-  }
-   
-   .btn{
-    background-color: #4CAF50; 
-    border: none;
-    color: white;
-    padding: 15px 32px;
+
+}
+
+.card-1{
+    margin-top: 5%;
+    margin-left: 20%;
+    /* background-color: gold; */
+}
+
+.card-2{
+    margin-top: 5%;
+    margin-left: 5%;
+    /* background-color: deepskyblue; */
+}
+
+.container{
+    background-color: maroon;
+    /* background-image:url(./images/salon.jpg);  */
+    background-image: no-repeat;
+    background-image: cover;
+    height: 1000px;
+    width: 1500px;
+}
+
+.h1{
     text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-     width: 100%;
-
-  }
-
-  
-  
-  
+    font-family: 'IBM Plex Sans', sans-serif;
+}
