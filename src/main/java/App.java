@@ -31,7 +31,7 @@ public class App {
            //get route for the index page
            get("/", (request, response) ->{
             Map<String, Object> model = new HashMap<String, Object>();
-            model.put("stylists",Stylist.all());
+            // model.put("stylists", Stylist.all());
             model.put("template", "templates/index.vtl");
             return new ModelAndView(model, layout);
         },new VelocityTemplateEngine());
@@ -59,7 +59,7 @@ public class App {
     
         get("/stylist", (request, response) ->{
             Map<String, Object> model = new HashMap<String, Object>();
-            model.put("stylists", Stylist.all());
+            // model.put("stylists", Stylist.all());
             model.put("template", "templates/stylist.vtl");
             return new ModelAndView(model, layout);
         },new VelocityTemplateEngine());

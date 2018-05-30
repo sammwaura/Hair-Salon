@@ -25,9 +25,9 @@ public class Client{
     // method to clear Test Database
     public static void clear(){
         // try to make connection to test DB
-        try (Connection con = DB.sql20.open()){
+        try (Connection con = DB.sql2o.open()){
 
-            String deleteClientQuery = DELETE FROM clients *;
+            String deleteClientQuery = "DELETE FROM clients *;";
 
             con.createQuery(deleteClientQuery).executeUpdate();
 
@@ -64,7 +64,7 @@ public class Client{
         // method that saves all instances of class
         public void save(){
 
-            try(Connection con = DB.sql20.open()) {
+            try(Connection con = DB.sql2o.open()) {
 
                 String sql = "INSERT INTO clients(name, style, stylistId)VALUES (:name, :style, :stylistId)";
 
@@ -133,6 +133,8 @@ public class Client{
 
         }
     }
+	public void deleteClient() {
+	}
 
 }
     
